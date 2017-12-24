@@ -1,0 +1,19 @@
+{
+  "name": "cse741-project",
+  "version": "1.0.0",
+  "description": "embedded systems task scheduler",
+  "main": "project.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "tyb",
+  "license": "ISC",
+  "devDependencies": {
+    "eslint-config-airbnb-base": "^12.1.0",
+    "eslint-plugin-import": "^2.8.0"
+  },
+  "dependencies": {
+    "array-sort": "^1.0.0",
+    "mathjs": "^3.18.0"
+  }
+}
