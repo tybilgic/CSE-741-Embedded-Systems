@@ -30,7 +30,7 @@ module.exports.run = (tasks) => {
   // copy tasks array to sortedTasks
   const sortedTasks = JSON.parse(JSON.stringify(tasks));
 
-  // Sort tasks: lowest deadline first
+  // Sort tasks: earliest deadline first
   arraySort(sortedTasks, 'deadline');
 
   for (let time = 0; time < scheduleInfo.plotDuration; time += 1) {
@@ -44,14 +44,20 @@ module.exports.run = (tasks) => {
       }
     }
 
-    // Push current process to the schedule array
-    scheduleInfo.schedule.push(sortedTasks[taskIdx].name);
-    sortedTasks[taskIdx].computationTime -= 1;
+    if (taskIdx < scheduleInfo.taskCount) {
+      // Push current process to the schedule array
+      scheduleInfo.schedule.push(sortedTasks[taskIdx].name);
+      sortedTasks[taskIdx].computationTime -= 1;
 
-    // Check deadline
-    if (time + 1 === sortedTasks[taskIdx].deadline && sortedTasks[taskIdx].computationTime > 0) {
-      scheduleInfo.result = false;
-      scheduleInfo.reason += `Task '${sortedTasks[taskIdx].name}' missed it's deadline at time=${time + 1}.\n`;
+      // Check deadline
+      if (time + 1 === sortedTasks[taskIdx].deadline && sortedTasks[taskIdx].computationTime > 0) {
+        scheduleInfo.result = false;
+        scheduleInfo.reason += `Task '${sortedTasks[taskIdx].name}' missed it's deadline at time=${time + 1}.\n`;
+      }
+    } else {
+      // No task available insert Pass and increase plot duration
+      scheduleInfo.schedule.push('P');
+      scheduleInfo.plotDuration += 1;
     }
   }
 

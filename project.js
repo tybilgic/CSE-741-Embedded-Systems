@@ -1,12 +1,12 @@
 const fs = require('fs');
 const readLine = require('readline');
 const path = require('path');
-// const math = require('mathjs');
 
 // scheduling algorithms
 const edd = require('./edd');
 const edf = require('./edf');
 const ll = require('./ll');
+const edfP = require('./edfP');
 const rm = require('./rm');
 
 // plotter
@@ -36,22 +36,28 @@ function readTasksFromFile() {
     input: fs.createReadStream(filename),
   });
 
+  let lineNumber = 0;
   let lineCount = 0;
   lineReader.on('line', (line) => {
-    if (lineCount === 0) {
-      // console.log(`${line} tasks will be scheduled.`);
-      lineCount += 1;
+    if (lineNumber === 0) {
+      lineCount = line;
+      // console.log(`${lineCount} tasks will be scheduled.`);
     } else {
       const task = line.split(' ');
       const taskObj = {
-        name: `T${lineCount}`,
+        name: `T${lineNumber}`,
         isPeriodic: task[0] === '0',
         arrivalTime: parseInt(task[1], 10),
         computationTime: parseInt(task[2], 10),
+        requiredTime: parseInt(task[2], 10),
         deadline: parseInt(task[3], 10),
+        period: parseInt(task[3], 10),
       };
       tasks.push(taskObj);
-      lineCount += 1;
+    }
+    lineNumber += 1;
+    if (lineNumber > lineCount) {
+      lineReader.close();
     }
   });
 
@@ -80,8 +86,8 @@ function readTasksFromFile() {
       }
     } else {
       // Run periodic schedulers RM, EDF
-      if (edf.check(tasks)) {
-        const edfSchedule = edf.run(tasks);
+      if (edfP.check(tasks)) {
+        const edfSchedule = edfP.run(tasks);
         plot(edfSchedule);
       } else {
         console.log('Cannot schedule with EDF!');

@@ -8,7 +8,8 @@ module.exports = (schedule) => {
   for (let time = 0; time < schedule.plotDuration; time += 1) {
     for (let taskIdx = 0; taskIdx < schedule.taskCount; taskIdx += 1) {
       if (schedule.schedule[time] === `T${taskIdx + 1}`) {
-        plot[taskIdx] += ' \u25A0 ';
+        // plot[taskIdx] += ' \u25A0 ';
+        plot[taskIdx] += ' x ';
       } else {
         plot[taskIdx] += ' _ ';
       }

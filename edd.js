@@ -29,7 +29,7 @@ module.exports.run = (tasks) => {
   // copy tasks array to sortedTasks
   const sortedTasks = JSON.parse(JSON.stringify(tasks));
 
-  // Sort tasks: lowest deadline first
+  // Sort tasks: earliest deadline first
   arraySort(sortedTasks, 'deadline');
 
   // Prepare the schedule

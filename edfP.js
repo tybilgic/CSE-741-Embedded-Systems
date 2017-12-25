@@ -1,4 +1,17 @@
 const arraySort = require('array-sort');
+const math = require('mathjs');
+
+const lcm = (numArr) => {
+  if (numArr.length > 1) {
+    let result = 0;
+    result = math.lcm(numArr[0], numArr[1]);
+    for (let i = 2; i < numArr.length; i += 1) {
+      result = math.lcm(result, numArr[i]);
+    }
+    return result;
+  }
+  return false;
+};
 
 module.exports.check = (tasks) => {
   if (tasks.length > 1) {
@@ -23,9 +36,13 @@ module.exports.run = (tasks) => {
     reason: '',
   };
 
+  const taskPeriods = [];
+
   for (let i = 0; i < tasks.length; i += 1) {
-    scheduleInfo.plotDuration += tasks[i].computationTime;
+    taskPeriods.push(tasks[i].deadline);
   }
+
+  scheduleInfo.plotDuration = lcm(taskPeriods);
 
   // copy tasks array to sortedTasks
   const sortedTasks = JSON.parse(JSON.stringify(tasks));
@@ -34,6 +51,19 @@ module.exports.run = (tasks) => {
   arraySort(sortedTasks, 'deadline');
 
   for (let time = 0; time < scheduleInfo.plotDuration; time += 1) {
+    // Go over task list, check periods and update tasks
+    for (let i = 0; i < scheduleInfo.taskCount; i += 1) {
+      if (sortedTasks[i].isPeriodic === true
+        && time === (sortedTasks[i].arrivalTime + sortedTasks[i].period)) {
+        sortedTasks[i].arrivalTime += sortedTasks[i].period;
+        sortedTasks[i].deadline += sortedTasks[i].period;
+        sortedTasks[i].computationTime = sortedTasks[i].requiredTime;
+      }
+    }
+
+    // Sort by deadline
+    arraySort(sortedTasks, 'deadline');
+
     // Select a task by looking at it's arrival time and remaining computation time
     let taskIdx;
     for (taskIdx = 0; taskIdx < scheduleInfo.taskCount; taskIdx += 1) {
@@ -60,6 +90,5 @@ module.exports.run = (tasks) => {
       scheduleInfo.plotDuration += 1;
     }
   }
-
   return scheduleInfo;
 };
