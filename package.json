@@ -12,5 +12,9 @@
   "dependencies": {
     "array-sort": "^1.0.0",
     "mathjs": "^3.18.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tybilgic/CSE-741-Embedded-Systems.git"
   }
 }
