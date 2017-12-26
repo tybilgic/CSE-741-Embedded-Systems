@@ -1,27 +1,19 @@
 const arraySort = require('array-sort');
-const math = require('mathjs');
-
-const lcm = (numArr) => {
-  if (numArr.length > 1) {
-    let result = 0;
-    result = math.lcm(numArr[0], numArr[1]);
-    for (let i = 2; i < numArr.length; i += 1) {
-      result = math.lcm(result, numArr[i]);
-    }
-    return result;
-  }
-  return false;
-};
+const utils = require('./utils');
 
 module.exports.check = (tasks) => {
+  let utilization = 0;
   if (tasks.length > 1) {
     for (let taskIdx = 0; taskIdx < tasks.length; taskIdx += 1) {
       if (tasks[taskIdx].arrivalTime >= tasks[taskIdx].deadline ||
           tasks[taskIdx].arrivalTime + tasks[taskIdx].computationTime > tasks[taskIdx].deadline) {
         return false;
       }
+      utilization += (tasks[taskIdx].requiredTime / tasks[taskIdx].period);
     }
-    return true;
+    if (utilization <= 1) {
+      return true;
+    }
   }
   return false;
 };
@@ -42,7 +34,7 @@ module.exports.run = (tasks) => {
     taskPeriods.push(tasks[i].deadline);
   }
 
-  scheduleInfo.plotDuration = lcm(taskPeriods);
+  scheduleInfo.plotDuration = utils.lcm(taskPeriods);
 
   // copy tasks array to sortedTasks
   const sortedTasks = JSON.parse(JSON.stringify(tasks));

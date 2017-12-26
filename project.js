@@ -1,6 +1,7 @@
 const fs = require('fs');
 const readLine = require('readline');
 const path = require('path');
+const utils = require('./utils');
 
 // scheduling algorithms
 const edd = require('./edd');
@@ -68,21 +69,21 @@ function readTasksFromFile() {
         const eddSchedule = edd.run(tasks);
         plot(eddSchedule);
       } else {
-        console.log('Cannot schedule with EDD!');
+        utils.print('Cannot schedule with EDD!');
       }
 
       if (edf.check(tasks)) {
         const edfSchedule = edf.run(tasks);
         plot(edfSchedule);
       } else {
-        console.log('Cannot schedule with EDF!');
+        utils.print('Cannot schedule with EDF!');
       }
 
       if (ll.check(tasks)) {
         const llSchedule = ll.run(tasks);
         plot(llSchedule);
       } else {
-        console.log('Cannot schedule with LL!');
+        utils.print('Cannot schedule with LL!');
       }
     } else {
       // Run periodic schedulers RM, EDF
@@ -90,14 +91,14 @@ function readTasksFromFile() {
         const edfSchedule = edfP.run(tasks);
         plot(edfSchedule);
       } else {
-        console.log('Cannot schedule with EDF!');
+        utils.print('Cannot schedule with EDF!');
       }
 
       if (rm.check(tasks)) {
         const rmSchedule = rm.run(tasks);
         plot(rmSchedule);
       } else {
-        console.log('Cannot schedule with RM!');
+        utils.print('Cannot schedule with RM!');
       }
     }
   });

@@ -1,3 +1,5 @@
+const utils = require('./utils');
+
 module.exports = (schedule) => {
   const plot = [];
 
@@ -5,25 +7,27 @@ module.exports = (schedule) => {
     plot.push([`T${taskIdx + 1}|`]);
   }
 
+  plot.push(['t=0 ']);
+
   for (let time = 0; time < schedule.plotDuration; time += 1) {
     for (let taskIdx = 0; taskIdx < schedule.taskCount; taskIdx += 1) {
       if (schedule.schedule[time] === `T${taskIdx + 1}`) {
-        // plot[taskIdx] += ' \u25A0 ';
-        plot[taskIdx] += ' x ';
+        plot[taskIdx] += 'x|';
       } else {
-        plot[taskIdx] += ' _ ';
+        plot[taskIdx] += '_|';
       }
     }
+    plot[schedule.taskCount] += `${(time + 1) % 10} `;
   }
 
-  console.log(`Schedule for ${schedule.algorithm} algorithm:`);
+  utils.print(`Schedule for ${schedule.algorithm} algorithm:`);
   for (let line = 0; line < plot.length; line += 1) {
-    console.log(plot[line]);
+    utils.print(plot[line]);
   }
   if (schedule.result === true) {
-    console.log('All deadlines are OK.');
+    utils.print('All deadlines are OK.');
   } else {
-    console.log('Deadline missed:');
-    console.log(schedule.reason);
+    utils.print('Deadline missed:');
+    utils.print(schedule.reason);
   }
 };

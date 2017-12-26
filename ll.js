@@ -3,14 +3,25 @@ const arraySort = require('array-sort');
 const calculateLexity = (currentTime, task) => task.deadline - (task.computationTime + currentTime);
 
 module.exports.check = (tasks) => {
+  let totalComputationTime = 0;
+  let latestDeadline = 0;
   if (tasks.length > 1) {
     for (let taskIdx = 0; taskIdx < tasks.length; taskIdx += 1) {
       if (tasks[taskIdx].arrivalTime >= tasks[taskIdx].deadline ||
           tasks[taskIdx].arrivalTime + tasks[taskIdx].computationTime > tasks[taskIdx].deadline) {
         return false;
       }
+
+      if (tasks[taskIdx].deadline > latestDeadline) {
+        latestDeadline = tasks[taskIdx].deadline;
+      }
+
+      totalComputationTime += tasks[taskIdx].computationTime;
     }
-    return true;
+
+    if (totalComputationTime <= latestDeadline) {
+      return true;
+    }
   }
   return false;
 };
